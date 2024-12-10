@@ -19,7 +19,7 @@ default_region_name = 'ap-south-1'
 import boto3
 import json
 
-def sendToSQS(msg_body,msg_attr, queue_url,region_name=default_region_name):
+def sendToSQS(msg_body,queue_url,msg_attr=none, region_name=default_region_name):
     sqs_client = boto3.client('sqs',region_name)
     data = json.dumps(msg_body)
     
