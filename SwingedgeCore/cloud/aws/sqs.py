@@ -1,5 +1,5 @@
 # Default params
-default_region_name = 'ap-south-1'
+# default_region_name = 'ap-south-1'
 
 # def send_msg_to_aws(msg):
 #     pass
@@ -19,7 +19,7 @@ default_region_name = 'ap-south-1'
 import boto3
 import json
 
-def sendToSQS(msg_body,queue_url,msg_attr=none, region_name=default_region_name):
+def sendToSQS(msg_body,queue_url,msg_attr=None, region_name=default_region_name):
     sqs_client = boto3.client('sqs',region_name)
     data = json.dumps(msg_body)
     
