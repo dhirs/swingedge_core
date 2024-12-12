@@ -9,3 +9,10 @@ def get_alphavantage_apikey():
     api_key = config1['apikey']
     
     return api_key
+
+def get_db_credentials():
+    ssm = boto3.client('ssm')
+    parameter = ssm.get_parameter(Name=f'timescaledb_credentials', WithDecryption=True)
+    config = json.loads(parameter['Parameter']['Value'])
+    
+    return config
