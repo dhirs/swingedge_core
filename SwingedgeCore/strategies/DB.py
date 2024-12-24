@@ -7,6 +7,7 @@ class DB:
     
     # initialize the database here with data provided in db_creds
     def __init__(self,db_creds):
-        
+        pass
     
-    def getData(sql)
+    def getData(sql):
+        pass

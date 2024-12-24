@@ -16,3 +16,10 @@ def get_db_credentials():
     config = json.loads(parameter['Parameter']['Value'])
     
     return config
+
+def get_redis_credential():
+    ssm = boto3.client('ssm')
+    parameter = ssm.get_parameter(Name=f'redis_credentials', WithDecryption=True)
+    config = json.loads(parameter['Parameter']['Value'])
+    
+    return config
