@@ -8,6 +8,9 @@ import SwingEdgeCore.config.db as DB
 
 conn = DB.connection()
 
+# why are we doing all this? we should simply add the volume of all rows in db for current date
+# and return. start/end times do not matter.
+# so something like select all candles where to_date(timestamp) == datetime.date.today() 
 
 def TotalCurrentVolume(breakout_till_where_to_calculate="1 hour", symbol="AAPL", 
                        date_for_which_to_calculate="2024-12-23", time_till_which_to_calculate="06:00"):
