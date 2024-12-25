@@ -1,8 +1,3 @@
-import psycopg2
-import pandas as pd
-import boto3
-import json
-from datetime import datetime, timedelta
 import SwingEdgeCore.config.db as DB
 
 
