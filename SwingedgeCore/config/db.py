@@ -57,7 +57,7 @@ def fetch_all_rows(*,query, params):
     
     
     
-def get_interval_days(start_date, end_date)
+def get_interval_days(start_date, end_date):
 
     
     d0 = date(start_date)

@@ -33,7 +33,7 @@ def get_total_current_volume(symbol):
         return None
 
 ##To do
-def TotalVolumeBetween(symbol, start_time, end_time)
+def TotalVolumeBetween(symbol, start_time, end_time):
 
     try:
               
