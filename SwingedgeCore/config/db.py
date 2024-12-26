@@ -1,5 +1,6 @@
 import psycopg2
 import boto3
+from datetime import date
 import SwingedgeCore.cloud.aws.credentials as creds
 
 def get_creds()
@@ -37,5 +38,15 @@ def get_one(query,params):
 
     except Exception as e:
         return e
+    
+    
+def get_interval_days(start_date, end_date)
+
+    
+    d0 = date(start_date)
+    d1 = date(end_date)
+    delta = d1 - d0
+    
+    return delta.days
     
 
