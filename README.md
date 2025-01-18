@@ -1,1 +1,1 @@
-# swingedge_core
+# Swignedge Core Package
