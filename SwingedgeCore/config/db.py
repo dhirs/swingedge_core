@@ -50,7 +50,8 @@ class TimescaleDBUploader:
 
     def __resolve_entity(self):
         if self.entity.lower() == 'getcandledata':
-            return "stock_dummy"
+            # return "stock_dummy"
+            return "us_etfs_stocks"
         else:
             raise ValueError(f"Entity '{self.entity}' is not recognized.")
 
@@ -139,7 +140,7 @@ class DBTimestamps:
         try:
             query = """
                 SELECT symbol, MAX(timestamp) as latest_timestamp
-                FROM stock_dummy
+                FROM us_etfs_stocks
                 GROUP BY symbol
                 ORDER BY latest_timestamp DESC
             """
