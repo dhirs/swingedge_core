@@ -4,7 +4,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from config.db import fetch_single_result
 from datetime import datetime, timezone
 
-def get_average_daily_volume(*, symbol, n, hour_type='eh'):
+def get_average_daily_volume(*, symbol, n, hour_type='mh'):
     try:
         current_time = datetime.now(timezone.utc)
         current_date = current_time.date()  # Get today's date
