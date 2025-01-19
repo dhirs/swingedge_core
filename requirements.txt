@@ -1,1 +1,11 @@
+alpha_vantage
+python-dotenv
+pandas 
+psycopg2-binary
+SQLAlchemy 
+sqlalchemy-timescaledb
 boto3
+redis
+twine
+setuptools
+wheel
