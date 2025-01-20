@@ -126,7 +126,7 @@ class DBTimestamps:
 
 
 
-##Geeric DB operations
+##Generic DB operations
 class GenericDBOperations:
     def __init__(self, connection, entity):
         self.connection = connection
