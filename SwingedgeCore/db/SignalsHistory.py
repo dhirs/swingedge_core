@@ -4,57 +4,43 @@ import datetime, timezone
 class SignalsHistory(base):
     
     # Delete any existing rows for the same strategy/date combination
-    def delete_duplicates(self, data_to_delete):
+    def delete_duplicates(self, sid, date):
         
-        delete_query = """
+        delete_query = f"""
             DELETE FROM signals_history
-            WHERE strategy_id = %s AND date = %s
+            WHERE strategy_id = {sid} AND date = {date}
             """
 
-        super().execute_single_query(delete_query,data_to_delete)
+        super().execute_single_query(delete_query)
         
     # Add new signals
     def add_rows(self, strategy_id, df):
         
         
         current_date = datetime.now(timezone.utc).date()
-        
-        data_to_delete = [strategy_id,current_date]
-        self.delete_duplicates(data_to_delete)
+        self.delete_duplicates(strategy_id, current_date)
         
         
         # Add new rows
-        insert_query = """
-        INSERT INTO signals_history (strategy_id, symbol, date, avg_volume, cross_trend)
-        VALUES (%s, %s, %s, %s, %s)
-        """
-        super().execute_bulk_query(self, insert_query,data_to_insert)
-        
-        # try:
-        #     with conn.cursor() as cur:
-        #         cur.execute(delete_query, (strategy_id, current_date))
-        #         print(f"Deleted all existing data for strategy_id={strategy_id} and date={current_date}.")
-
-            
-        #         unique_symbols = {}
-        #         for _, row in df.iterrows():
-        #             symbol = row['Symbol']
-        #             if symbol not in unique_symbols:
-        #                 unique_symbols[symbol] = (
-        #                     strategy_id, 
-        #                     symbol, 
-        #                     current_date, 
-        #                     row['Avg_Volume'], 
-        #                     row['cross_trend']
-        #                 )
+        unique_symbols = {}
+        for _, row in df.iterrows():
+            symbol = row['Symbol']
+            if symbol not in unique_symbols:
+                unique_symbols[symbol] = (
+                    strategy_id, 
+                    symbol, 
+                    current_date, 
+                    row['Avg_Volume'], 
+                    row['cross_trend']
+                )
 
                 
-        #         bulk_data = list(unique_symbols.values())
-        #         cur.executemany(insert_query, bulk_data)
+        bulk_data = list(unique_symbols.values())
+        
+        insert_query = """
+        INSERT INTO signals_history (strategy_id, symbol, date, avg_volume, cross_trend)
+        VALUES ({strategy_id}, {symbol}, {date}, {avg_volume}, {cross_trend})
+        """
+        super().execute_bulk_query(self, insert_query)
 
-            
-        #         conn.commit()
-        #     print("Successfully inserted new data.")
-        # except Exception as e:
-        #     print("Error while inserting/updating data:", e)
-        #     conn.rollback()
+       
