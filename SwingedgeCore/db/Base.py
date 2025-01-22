@@ -1,48 +1,49 @@
-import psycopg2, boto3,json
-import sqlio
+import psycopg2
+import psycopg2.extras
+import boto3
+import json
+from SwingedgeCore.cloud.aws.ssm import Credentials
+import pandas.io.sql as sqlio
 
-class Base:
-      
-    def __init__(self):
+class DBBase:
+    def __init__(self, db_name="timescale"):
+        self.db_name = db_name
+        self.conn = self.__get_timescaledb_connection()
+
+    def __get_timescaledb_connection(self):
+        cred = Credentials(credential_name=self.db_name)
+        db_config = cred.get_credentials()
         try:
-            
-            ssm = boto3.client("ssm")
-            db_config = json.loads(ssm.get_parameter(Name='timescaledb_credentials', WithDecryption=True)['Parameter']['Value'])
-            
-            self.conn = psycopg2.connect(
-                database=db_config["database"],
-                user=db_config["user"],
-                password=db_config["password"],
-                host=db_config["host"],
-                port=db_config["port"],
+            conn = psycopg2.connect(
+                database=db_config['database'],
+                user=db_config['user'],
+                password=db_config['password'],
+                host=db_config['host'],
+                port=db_config['port'],
             )
-            print("Connected to TimescaleDB.")
-           
+            print("Connection to the Timescale PostgreSQL established successfully.")
+            return conn
         except Exception as e:
-            print("Error connecting to TimescaleDB: ", e)
-            # do some error handling
+            print("Connection to the Timescale PostgreSQL encountered an error: ", e)
+            return None
 
-    def get_results_dataframe(self,query):
-        return sqlio.read_sql_query(query,self.conn)
-    
-    def execute_single_query(self, query):
+    def get_results_dataframe(self, query):
+        try:
+            df = sqlio.read_sql_query(query, self.conn)
+            return df
+        except Exception as e:
+            raise ValueError("No dataframe results found: ", e)
+
+    def execute_query(self, query_template, params=None, bulk=False):
         conn = self.conn
         try:
             with conn.cursor() as cur:
-                cur.execute(query)
+                if bulk:
+                    psycopg2.extras.execute_values(cur, query_template, params)
+                else:
+                    cur.execute(query_template, params)
                 conn.commit()
-            print("Query executed successfully")
+            print("Query executed successfully.")
         except Exception as e:
             print("Error while executing query:", e)
-            conn.rollback()
-            
-    def execute_bulk_query(self, query):
-        conn = self.conn
-        try:
-            with conn.cursor() as cur:
-                cur.executemany(query)
-                conn.commit()
-            print("Bulk operation executed successfully")
-        except Exception as e:
-            print("Error while executing bulk operation:", e)
             conn.rollback()
