@@ -1,0 +1,42 @@
+2025-01-23 22:08:07,271 - INFO - Fetching data for symbol: EMKR
+2025-01-23 22:08:13,407 - INFO - Successfully fetched the page for symbol: EMKR
+2025-01-23 22:08:13,418 - INFO - Fetching data for symbol: SKLZ
+2025-01-23 22:08:14,366 - INFO - Successfully fetched the page for symbol: SKLZ
+2025-01-23 22:08:14,372 - INFO - Fetching data for symbol: SNAL
+2025-01-23 22:08:15,499 - INFO - Successfully fetched the page for symbol: SNAL
+2025-01-23 22:08:15,506 - INFO - Fetching data for symbol: VATE
+2025-01-23 22:08:16,865 - INFO - Successfully fetched the page for symbol: VATE
+2025-01-23 22:08:16,878 - INFO - Fetching data for symbol: VCSA
+2025-01-23 22:08:18,168 - INFO - Successfully fetched the page for symbol: VCSA
+2025-01-23 22:08:18,181 - INFO - Fetching data for symbol: YGMZ
+2025-01-23 22:08:24,823 - INFO - Successfully fetched the page for symbol: YGMZ
+2025-01-23 22:09:55,566 - INFO - Fetching data for symbol: EMKR
+2025-01-23 22:09:55,566 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:09:56,706 - DEBUG - https://finance.yahoo.com:443 "GET /quote/EMKR/holders/ HTTP/1.1" 200 None
+2025-01-23 22:09:57,031 - INFO - Successfully fetched the page for symbol: EMKR
+2025-01-23 22:09:57,031 - DEBUG - Page Title: Emcore Corporation (EMKR) Stock Major Holders - Yahoo Finance
+2025-01-23 22:09:57,039 - INFO - Fetching data for symbol: SKLZ
+2025-01-23 22:09:57,044 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:09:57,901 - DEBUG - https://finance.yahoo.com:443 "GET /quote/SKLZ/holders/ HTTP/1.1" 200 None
+2025-01-23 22:09:58,177 - INFO - Successfully fetched the page for symbol: SKLZ
+2025-01-23 22:09:58,177 - DEBUG - Page Title: Skillz Inc. (SKLZ) Stock Major Holders - Yahoo Finance
+2025-01-23 22:09:58,193 - INFO - Fetching data for symbol: SNAL
+2025-01-23 22:09:58,193 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:09:59,127 - DEBUG - https://finance.yahoo.com:443 "GET /quote/SNAL/holders/ HTTP/1.1" 200 None
+2025-01-23 22:09:59,375 - INFO - Successfully fetched the page for symbol: SNAL
+2025-01-23 22:09:59,375 - DEBUG - Page Title: Snail, Inc. (SNAL) Stock Major Holders - Yahoo Finance
+2025-01-23 22:09:59,375 - INFO - Fetching data for symbol: VATE
+2025-01-23 22:09:59,375 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:10:00,240 - DEBUG - https://finance.yahoo.com:443 "GET /quote/VATE/holders/ HTTP/1.1" 200 None
+2025-01-23 22:10:00,591 - INFO - Successfully fetched the page for symbol: VATE
+2025-01-23 22:10:00,591 - DEBUG - Page Title: INNOVATE Corp. (VATE) Stock Major Holders - Yahoo Finance
+2025-01-23 22:10:00,598 - INFO - Fetching data for symbol: VCSA
+2025-01-23 22:10:00,598 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:10:01,638 - DEBUG - https://finance.yahoo.com:443 "GET /quote/VCSA/holders/ HTTP/1.1" 200 None
+2025-01-23 22:10:02,093 - INFO - Successfully fetched the page for symbol: VCSA
+2025-01-23 22:10:02,094 - DEBUG - Page Title: Vacasa, Inc. (VCSA) Stock Major Holders - Yahoo Finance
+2025-01-23 22:10:02,103 - INFO - Fetching data for symbol: YGMZ
+2025-01-23 22:10:02,105 - DEBUG - Starting new HTTPS connection (1): finance.yahoo.com:443
+2025-01-23 22:10:03,135 - DEBUG - https://finance.yahoo.com:443 "GET /quote/YGMZ/holders/ HTTP/1.1" 200 None
+2025-01-23 22:10:03,369 - INFO - Successfully fetched the page for symbol: YGMZ
+2025-01-23 22:10:03,369 - DEBUG - Page Title: MingZhu Logistics Holdings Limited (YGMZ) Stock Major Holders - Yahoo Finance

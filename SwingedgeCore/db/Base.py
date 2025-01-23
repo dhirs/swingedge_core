@@ -34,7 +34,7 @@ class DBBase:
         except Exception as e:
             raise ValueError("No dataframe results found: ", e)
 
-    def execute_query(self, query_template, params=None, bulk=False):
+    def execute_query(self, query_template, params=None, bulk=False, fetch_results=False):
         conn = self.conn
         try:
             with conn.cursor() as cur:
@@ -42,8 +42,15 @@ class DBBase:
                     psycopg2.extras.execute_values(cur, query_template, params)
                 else:
                     cur.execute(query_template, params)
+
+                
+                if fetch_results:
+                    results = cur.fetchall()
+                    return results
+
                 conn.commit()
-            print("Query executed successfully.")
+                print("Query executed successfully.")
         except Exception as e:
             print("Error while executing query:", e)
             conn.rollback()
+            return None
