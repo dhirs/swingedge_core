@@ -21,9 +21,9 @@ class Scrap(base.DBBase):
 
             query = """
                 SELECT symbol FROM signals_history
-                WHERE date = %s
+                WHERE date = %s AND strategy_id = %s
             """
-            result = self.__execute_query(query, params=(current_timestamp,))
+            result = self.__execute_query(query, params=(current_timestamp,1))
             
             if result:
                 symbols = [symbol_info[0] for symbol_info in result]
