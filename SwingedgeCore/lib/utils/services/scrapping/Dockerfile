@@ -1,20 +1,23 @@
-FROM python:3
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
     && rm -rf /var/lib/apt/lists/*
+    
+# Set the working directory inside the container
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-# Copy project files
-COPY requirements.txt ./
+# Copy the requirements file into the container
+COPY requirement.txt /app/
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirement.txt
 
-COPY . .
+# Copy the rest of the application code into the container
+COPY . /app/
 
-CMD ["python","./src/Scrap.py"]
-
+# Set the default command to run the script
+CMD ["python", "Scrap.py"]
