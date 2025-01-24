@@ -1,0 +1,5 @@
+pandas
+fake-useragent
+beautifulsoup4
+requests
+git+https://github.com/dhirs/swingedge_core.git@main#egg=SwingedgeCore
