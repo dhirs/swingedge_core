@@ -176,6 +176,6 @@ class Scrap(base.DBBase):
             print(f"Error upserting data into i_holding table: {e}")
 
 
-if __name__ == "__main__":
-    scrap = Scrap()
-    scrap.execute()
+
+scrap = Scrap()
+scrap.execute()
