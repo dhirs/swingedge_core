@@ -1,5 +1,12 @@
+boto3
+psycopg2
+pandas-ta
+matplotlib
+setuptools
+numpy==1.26.4
 pandas
 fake-useragent
 beautifulsoup4
 requests
+
 git+https://github.com/dhirs/swingedge_core.git@main#egg=SwingedgeCore
