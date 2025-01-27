@@ -120,6 +120,13 @@ class S3FileManager:
         self.s3_client.put_object(Bucket=self.bucket_name, Key=self.file_name, Body=json.dumps(default_content))
         print(f"Content of '{self.file_name}' deleted and replaced with default content: {default_content}")
     
+    def upload_file(self, local_file_path):
+        try:
+            self.s3_client.upload_file(local_file_path, self.bucket_name, self.file_name)
+            print(f"File '{local_file_path}' uploaded successfully to '{self.bucket_name}/{self.file_name}'.")
+        except Exception as e:
+            print(f"Error uploading file '{local_file_path}' to S3: {e}")
+    
     def set_last_timestamp(self):
         try:
             timestamp = DBTimestamps()
