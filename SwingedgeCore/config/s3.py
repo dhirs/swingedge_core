@@ -96,14 +96,23 @@ class S3FileManager:
             return
         self.s3_client.delete_object(Bucket=self.bucket_name, Key=self.file_name)
         print(f"File '{self.file_name}' deleted successfully.")
-
+    
     def load_file_content(self):
         if not self.file_exists():
             print(f"File '{self.file_name}' does not exist.")
             return None
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.file_name)
         file_content = response['Body'].read().decode('utf-8')
-        return json.loads(file_content) if file_content else {'alpha_ts_values': []}
+
+        if not file_content:
+            print(f"File '{self.file_name}' is empty.")
+            return {'alpha_ts_values': []}
+        
+        try:
+            return json.loads(file_content)
+        except json.JSONDecodeError:
+            print(f"File '{self.file_name}' does not contain valid JSON.")
+            return file_content 
 
     def save_file_content(self, content):
         if not self.file_exists():
@@ -119,7 +128,7 @@ class S3FileManager:
         default_content = default_content or {'alpha_ts_values': []}
         self.s3_client.put_object(Bucket=self.bucket_name, Key=self.file_name, Body=json.dumps(default_content))
         print(f"Content of '{self.file_name}' deleted and replaced with default content: {default_content}")
-    
+        
     def upload_file(self, local_file_path):
         try:
             self.s3_client.upload_file(local_file_path, self.bucket_name, self.file_name)
@@ -165,26 +174,3 @@ class S3ManagerFacade:
         self.bucket_handler.delete_bucket(delete_all_files=True)
 
 
-# Example usage
-if __name__ == "__main__":
-    bucket_name = "alpha2-test-bucket"
-    file_name = "alpha-timestamp-test"
-    s3_manager = S3ManagerFacade(bucket_name, file_name)
-
-    # Setup bucket and file
-    s3_manager.setup()
-
-    # Load content from file
-    content = s3_manager.file_manager.load_file_content()
-    print(f"Loaded content: {content}")
-
-    # Save new content
-    new_content = [{'symbol': 'AAPL', 'timestamp': 1672531200}]
-    s3_manager.file_manager.save_file_content(new_content)
-
-    # Load updated content
-    updated_content = s3_manager.file_manager.load_file_content()
-    print(f"Updated content: {updated_content}")
-
-    # Tear down (delete bucket and file)
-    s3_manager.teardown()
