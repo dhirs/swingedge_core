@@ -154,11 +154,18 @@ class Scrap(base.DBBase):
             n_inst = EXCLUDED.n_inst;
         """
         try:
-            new_symbols = set(df['symbol'])
-            delete_query = "DELETE FROM i_holding WHERE symbol NOT IN %s;"
-            self.__execute_query(query_template=delete_query, params=(tuple(new_symbols),),bulk=True,fetch_results=False)
-            print(f"Deleted records for symbols not in the new list.")
+            # Get the current UTC date
+            current_date = datetime.now(timezone.utc).date()
 
+            # Step 1: Delete records for today's date
+            delete_today_query = """
+            DELETE FROM i_holding
+            WHERE DATE(date) = %s;
+            """
+            self.__execute_query(query_template=delete_today_query, params=(current_date,), bulk=True, fetch_results=False)
+            print(f"Deleted records for today's date: {current_date}.")
+
+            # Step 2: Prepare data for insertion/upsertion
             upsert_data = [
                 (
                     row['symbol'],
@@ -170,8 +177,10 @@ class Scrap(base.DBBase):
                 for _, row in df.iterrows()
             ]
 
-            self.__execute_query(query_template=upsert_query, params=upsert_data,bulk=True,fetch_results=False)
+            # Step 3: Insert/Update new data
+            self.__execute_query(query_template=upsert_query, params=upsert_data, bulk=True, fetch_results=False)
             print(f"Inserted/Updated {len(upsert_data)} records.")
+
         except Exception as e:
             print(f"Error upserting data into i_holding table: {e}")
 
