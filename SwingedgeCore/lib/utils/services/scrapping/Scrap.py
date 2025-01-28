@@ -8,7 +8,8 @@ import SwingedgeCore.db.Base as base
 
 
 class Scrap(base.DBBase):
-    def __init__(self, db_name="timescale"):
+    def __init__(self, db_name="timescale",strategy_id=1):
+        self.strategy_id = strategy_id
         super().__init__(db_name=db_name)
 
     def __execute_query(self, query_template, params=None, bulk=False, fetch_results=True):
@@ -110,7 +111,7 @@ class Scrap(base.DBBase):
             return
         
         data = self.__scrap_url(symbols=symbols)
-        date_list, symbol_list, insider_list, percentage_institution_list, number_institution_list = [], [], [], [], []
+        date_list, symbol_list, insider_list, percentage_institution_list, number_institution_list, strategy_list = [], [], [], [], [], []
 
         try:
             for info in data:
@@ -127,13 +128,15 @@ class Scrap(base.DBBase):
                 insider_list.append(insider)
                 percentage_institution_list.append(per_ins)
                 number_institution_list.append(num_ins)
+                strategy_list.append(self.strategy_id)
 
             scrap_data = {
                 'date': date_list,
                 'symbol': symbol_list,
                 'percentage_of_Shares_Held_by_All_Insider': insider_list,
                 'percentage_of_shares_by_institutions': percentage_institution_list,
-                'number_of_institutions_holding_the_stock': number_institution_list
+                'number_of_institutions_holding_the_stock': number_institution_list,
+                'strategy_id': strategy_list
             }
 
             df = pd.DataFrame(scrap_data)
@@ -142,11 +145,13 @@ class Scrap(base.DBBase):
         except Exception as e:
             print("Error during data processing:", e)
 
+    
+    
     def __insert_into_table(self, df):
         upsert_query = """
-        INSERT INTO i_holding (symbol, date, p_insider, p_inst, n_inst)
+        INSERT INTO i_holding (symbol, date, p_insider, p_inst, n_inst, strategy_id)
         VALUES %s
-        ON CONFLICT (symbol) 
+        ON CONFLICT (symbol,date,strategy_id) 
         DO UPDATE 
         SET date = EXCLUDED.date,
             p_insider = EXCLUDED.p_insider,
@@ -160,10 +165,12 @@ class Scrap(base.DBBase):
             # Step 1: Delete records for today's date
             delete_today_query = """
             DELETE FROM i_holding
-            WHERE DATE(date) = %s;
+            WHERE DATE(date) = %s and strategy_id = %s;
             """
-            self.__execute_query(query_template=delete_today_query, params=(current_date,), bulk=True, fetch_results=False)
-            print(f"Deleted records for today's date: {current_date}.")
+            
+            params_data = (current_date,self.strategy_id,)
+            self.__execute_query(query_template=delete_today_query, params=params_data, bulk=False, fetch_results=False)
+            print(f"Deleted records for today's date and strategy: {current_date} | strategy_id: {self.strategy_id}.")
 
             # Step 2: Prepare data for insertion/upsertion
             upsert_data = [
@@ -172,11 +179,11 @@ class Scrap(base.DBBase):
                     row['date'],
                     float(row['percentage_of_Shares_Held_by_All_Insider'].strip('%')),
                     float(row['percentage_of_shares_by_institutions'].strip('%')),
-                    int(row['number_of_institutions_holding_the_stock'])
+                    int(row['number_of_institutions_holding_the_stock']),
+                    row['strategy_id'],
                 )
                 for _, row in df.iterrows()
             ]
-
             # Step 3: Insert/Update new data
             self.__execute_query(query_template=upsert_query, params=upsert_data, bulk=True, fetch_results=False)
             print(f"Inserted/Updated {len(upsert_data)} records.")
@@ -186,5 +193,6 @@ class Scrap(base.DBBase):
 
 
 
-scrap = Scrap()
-scrap.execute()
+if __name__ == "__main__":
+    scrap = Scrap(strategy_id=1)
+    scrap.execute()
