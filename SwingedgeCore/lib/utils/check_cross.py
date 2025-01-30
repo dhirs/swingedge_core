@@ -1,25 +1,39 @@
+# class checkCross:
+#     # method, three flags, window
+#     # df,direction = 'Both','Up','Down'
+#     pass
+
 import pandas_ta as ta
 import pandas as pd
 from datetime import datetime,timezone,timedelta
 
 class checkCross:
-    def __init__(self, df, window=1, direction='Up'):
+    def __init__(self, df, window=3, direction='Up',period='weeks'):
         self.df = df
-        self.scan_weeks = window
+        self.scan_period = window
         self.direction = direction
+        self.time = period
     
-    def __filter_data_within_specified_period(self,df,cross_weeks):
-    
+    def __filter_data_within_specified_period(self,df,cross_period):
         try:
-            days = cross_weeks*7
             df['bucket'] = pd.to_datetime(df['bucket'], utc=True)
-
             current_date = datetime.now(timezone.utc)
-            one_week_ago = current_date - timedelta(days=days)
-            one_week_ago = one_week_ago.replace(hour=0, minute=0, second=0, microsecond=0)
 
-            filtered_df = df[df['bucket'] >= one_week_ago]
-            
+            if self.time.lower() == 'weeks':
+                days = cross_period * 7
+                cutoff_date = current_date - timedelta(days=days)
+            elif self.time.lower() == 'days':
+                cutoff_date = current_date - timedelta(days=cross_period)
+            elif self.time.lower() == 'months':
+                days = cross_period * 30  
+                cutoff_date = current_date - timedelta(days=days)
+            elif self.time.lower() == 'hours':
+                cutoff_date = current_date - timedelta(hours=cross_period)
+            else:
+                raise ValueError("Invalid period type. Choose from 'weeks', 'days', 'months', or 'hours'.")
+
+            cutoff_date = cutoff_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            filtered_df = df[df['bucket'] >= cutoff_date]
             return filtered_df
 
         except Exception as e:
@@ -28,7 +42,7 @@ class checkCross:
         
     def scan_macd(self) -> list:
         data = self.df
-        data = self.__filter_data_within_specified_period(df=data, cross_weeks=self.scan_weeks)
+        data = self.__filter_data_within_specified_period(df=data, cross_period=self.scan_period)
         all_symbols = []
         try:
             macd_symbols_up, macd_symbols_down = [], []
