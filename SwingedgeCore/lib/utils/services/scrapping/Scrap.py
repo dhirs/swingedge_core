@@ -178,9 +178,9 @@ class Scrap(base.DBBase):
                 (
                     row['symbol'],
                     row['date'],
-                    float(row['percentage_of_Shares_Held_by_All_Insider'].strip('%')),
-                    float(row['percentage_of_shares_by_institutions'].strip('%')),
-                    int(row['number_of_institutions_holding_the_stock']),
+                    float(row['percentage_of_Shares_Held_by_All_Insider'].replace(',', '').strip('%')),  
+                    float(row['percentage_of_shares_by_institutions'].replace(',', '').strip('%')),  
+                    int(row['number_of_institutions_holding_the_stock'].replace(',', '')),  
                     row['strategy_id'],
                 )
                 for _, row in df.iterrows()
