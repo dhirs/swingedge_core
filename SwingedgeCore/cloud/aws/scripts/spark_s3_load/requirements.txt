@@ -1,0 +1,21 @@
+﻿alpha_vantage
+python-dotenv
+pandas 
+psycopg2-binary
+asyncpg
+SQLAlchemy 
+sqlalchemy-timescaledb
+boto3
+schedule
+redis
+setuptools
+wheel
+twine
+# git+https://github.com/dhirs/swingedge_core.git@main#egg=SwingedgeCore
+
+
+
+
+
+
+
