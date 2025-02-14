@@ -1,26 +1,32 @@
-FROM dhirs2020/swingedge:latest
+# Use the Bitnami Spark image as a base
+FROM bitnami/spark:3.1.2
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Switch to root user to install dependencies
+USER root
+
+# Install system dependencies (including PostgreSQL development libraries)
+RUN mkdir -p /var/lib/apt/lists/partial && apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
+    wget \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Create the directory 
-RUN mkdir -p /var/swingedge
+# Install Python dependencies (including PySpark)
+COPY requirements.txt ./ 
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Set the working directory inside the container
 WORKDIR /var/swingedge
 
-# Set the python path for all module imports
-ENV PYTHONPATH = "/var/swingedge"
+# Copy the rest of the files (including your Python code)
+COPY . ./ 
 
-# Copy the requirements file and install Python dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest files
-COPY . ./
+# Set environment variables for Java and Spark (ensure Spark is available in PATH)
+ENV JAVA_HOME=/opt/bitnami/java
+ENV SPARK_HOME=/opt/bitnami/spark
+ENV PATH=$PATH:/opt/bitnami/spark/bin
+ENV PYTHONPATH="/var/swingedge"
 
 # Command to run the script
-CMD ["python", "load_candles.py"]
+CMD ["python3", "load_candles.py"]
