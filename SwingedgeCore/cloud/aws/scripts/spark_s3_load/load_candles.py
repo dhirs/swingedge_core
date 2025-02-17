@@ -9,7 +9,7 @@ from SwingedgeCore.db.UsEtfsStocks import UsEtfsStocks
 # Load environment vars
 load_dotenv()
 
-# Initialize Spark context
+# # Initialize Spark context
 sc = SparkContext.getOrCreate()
 spark = SparkSession.builder.appName("CDCLoadtoS3").getOrCreate()
 
