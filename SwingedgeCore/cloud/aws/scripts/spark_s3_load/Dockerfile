@@ -4,12 +4,13 @@ FROM bitnami/spark:3.1.2
 # Switch to root user to install dependencies
 USER root
 
-# Install system dependencies (including PostgreSQL development libraries)
+# Install system dependencies (including git, PostgreSQL development libraries)
 RUN mkdir -p /var/lib/apt/lists/partial && apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
     wget \
     python3-pip \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies (including PySpark)
