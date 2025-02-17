@@ -22,6 +22,8 @@ WORKDIR /var/swingedge
 
 # Copy the rest of the files (including your Python code)
 COPY . ./ 
+COPY .env .env
+
 
 # Set environment variables for Java and Spark (ensure Spark is available in PATH)
 ENV JAVA_HOME=/opt/bitnami/java
