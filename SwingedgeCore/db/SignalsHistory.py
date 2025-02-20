@@ -9,9 +9,12 @@ class SignalsHistory(base.DBBase):
     def __execute_query(self, query_template, params=None, bulk=False):
         return super().execute_query(query_template, params, bulk)
     
-    def add_rows(self, strategy_id, df):      
+    def add_rows(self, strategy_id, df,current_date = None):      
         try:
-            current_date = datetime.now(timezone.utc).date()
+            if not current_date:
+               current_date = datetime.now(timezone.utc).date()
+            else:
+                current_date = current_date
             
             delete_query = """
             DELETE FROM signals_history
