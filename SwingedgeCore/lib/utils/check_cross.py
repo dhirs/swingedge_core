@@ -8,16 +8,20 @@ import pandas as pd
 from datetime import datetime,timezone,timedelta
 
 class checkCross:
-    def __init__(self, df, window=3, direction='Up',period='weeks'):
+    def __init__(self, df, window=3, direction='Up',period='weeks',current_date = None):
         self.df = df
         self.scan_period = window
         self.direction = direction
         self.time = period
+        self.current_date = current_date
     
     def __filter_data_within_specified_period(self,df,cross_period):
         try:
             df['bucket'] = pd.to_datetime(df['bucket'], utc=True)
-            current_date = datetime.now(timezone.utc)
+            if not self.current_date:
+               current_date = datetime.now(timezone.utc).date()
+            else:
+                current_date = current_date
 
             if self.time.lower() == 'weeks':
                 days = cross_period * 7
