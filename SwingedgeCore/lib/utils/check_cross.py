@@ -21,7 +21,7 @@ class checkCross:
             if not self.current_date:
                current_date = datetime.now(timezone.utc).date()
             else:
-                current_date = current_date
+                current_date = self.current_date
 
             if self.time.lower() == 'weeks':
                 days = cross_period * 7
