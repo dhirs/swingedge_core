@@ -92,3 +92,64 @@ class checkCross:
                 raise ValueError("Not a valid input")
         except Exception as e:
             print("Error getting macd symbols: ", e)
+    
+    
+    def detect_trend(self):
+        data = self.df
+        # data.to_csv("macd_raw.csv")
+        data = self.__filter_data_within_specified_period(df=data, cross_period=self.scan_period)
+        # data.to_csv("macd_raw.csv")
+        all_symbols = []
+        uptrend = []
+        downtrend = []
+        
+        try:
+            for symbol in data['symbol'].unique():
+                # print(symbol)
+                uptrend_cross_flag = None
+                downtrend_cross_flag = None
+                cross_data = data[data['symbol'] == symbol]
+                uptrend_cross_list = list(cross_data['uptrend_cross'])
+                downtrend_cross_list = list(cross_data['downtrend_cross'])
+                blue_line = list(cross_data['MACD_12_26_9'])
+                orange_line = list(cross_data['MACDs_12_26_9'])
+                
+                for i in range(len(uptrend_cross_list)):
+                    if uptrend_cross_list[i] == 1:  # Detect cross point
+                        uptrend_cross_flag = i  # Store the index of the cross event
+                        break  # Exit loop after finding first cross event
+                
+                for i in range(len(downtrend_cross_list)):
+                    if downtrend_cross_list[i] == 1:  # Detect cross point
+                        downtrend_cross_flag = i  # Store the index of the cross event
+                        break 
+                
+                if uptrend_cross_flag is not None:
+                    if all((blue_line[i] < 0 and orange_line[i] < 0) and (blue_line[i] > orange_line[i])  for i in range(uptrend_cross_flag, len(blue_line))):
+                        uptrend.append(symbol)
+                
+                if downtrend_cross_flag is not None:   
+                    if all((blue_line[i] > 0 and orange_line[i] > 0) and (blue_line[i] < orange_line[i])  for i in range(downtrend_cross_flag, len(blue_line))):
+                        downtrend.append(symbol)
+                       
+                
+                # print(f"Cross event index: {cross_flag}")
+            
+            # print(f"Uptrend symbols: {uptrend}")
+            # print(f"Downtrend symbols: {downtrend}")
+            # # print(f"All symbols: {all_symbols}")
+            # print('\n')
+            
+            if self.direction.lower() == "up":
+                return uptrend
+            elif self.direction.lower() == "down":
+                return downtrend
+            elif self.direction.lower() == "both":
+                all_symbols.append(uptrend)
+                all_symbols.append(downtrend)
+                return all_symbols
+            else:
+                raise ValueError("Not a valid input")
+        
+        except Exception as e:
+            print("Error in detecting trend: ", e)
