@@ -37,7 +37,8 @@ class checkCross:
                 raise ValueError("Invalid period type. Choose from 'weeks', 'days', 'months', or 'hours'.")
 
             cutoff_date = cutoff_date.replace(hour=0, minute=0, second=0, microsecond=0)
-            filtered_df = df[df['bucket'] >= cutoff_date]
+            filtered_df = df[df['bucket'] >= cutoff_date]  ##main
+            # filtered_df = df[(df['bucket'] >= cutoff_date) & (df['bucket'] < current_date)]  ##use this for specific dates
             return filtered_df
 
         except Exception as e:

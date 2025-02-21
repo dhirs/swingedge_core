@@ -8,15 +8,19 @@ import SwingedgeCore.db.Base as base
 
 
 class Scrap(base.DBBase):
-    def __init__(self, db_name="timescale",strategy_id=1):
+    def __init__(self, db_name="timescale",strategy_id=1,current_date=None):
         self.strategy_id = strategy_id
+        self.current_date = current_date
         super().__init__(db_name=db_name)
 
     def __execute_query(self, query_template, params=None, bulk=False, fetch_results=True):
         return super().execute_query(query_template, params, bulk, fetch_results)
 
     def __fetch_symbols_from_db(self):
-        current_timestamp = datetime.now(timezone.utc).date()
+        if not self.current_date:
+           current_timestamp = datetime.now(timezone.utc).date()
+        else:
+            current_timestamp = self.current_date
         try:
             print(f"Timestamp: {current_timestamp}")
 
