@@ -1,8 +1,6 @@
 import psycopg2
 import psycopg2.extras
-import boto3
-import json
-from SwingedgeCore.cloud.aws.ssm import Credentials
+from SwingedgeCore.cloud.aws.client.ssm import Credentials
 import pandas.io.sql as sqlio
 
 class DBBase:
@@ -21,10 +19,10 @@ class DBBase:
                 host=db_config['host'],
                 port=db_config['port'],
             )
-            print("Connection to the Timescale PostgreSQL established successfully.")
+            print("✅ Connection to the Timescale PostgreSQL established successfully.")
             return conn
         except Exception as e:
-            print("Connection to the Timescale PostgreSQL encountered an error: ", e)
+            print("❌ Connection to the Timescale PostgreSQL encountered an error: ", e)
             return None
 
     def get_results_dataframe(self, query):
@@ -32,7 +30,7 @@ class DBBase:
             df = sqlio.read_sql_query(query, self.conn)
             return df
         except Exception as e:
-            raise ValueError("No dataframe results found: ", e)
+            raise ValueError("❌ No dataframe results found: ", e)
 
     def execute_query(self, query_template, params=None, bulk=False, fetch_results=False):
         conn = self.conn
@@ -49,8 +47,10 @@ class DBBase:
                     return results
 
                 conn.commit()
-                print("Query executed successfully.")
+                print("✅ Query executed successfully.")
         except Exception as e:
-            print("Error while executing query:", e)
+            print("❌ Error while executing query:", e)
             conn.rollback()
             return None
+        finally:
+            conn.close()

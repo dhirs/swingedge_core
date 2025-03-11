@@ -9,7 +9,7 @@ ssm = boto3.client('ssm',region_name=region_name)
 class Credentials:
     def __init__(self, credential_name=None):
         if credential_name not in ['alpha', 'timescale', 's3']:
-            raise ValueError("Invalid credential_name. Choose from: 'alpha', 'timescale', 's3'")
+            raise ValueError("❌ Invalid credential_name. Choose from: 'alpha', 'timescale', 's3'")
         self.credential_name = credential_name
 
     def __timescaledb_credentials(self):
@@ -35,13 +35,13 @@ class Credentials:
         elif self.credential_name.lower() == "s3":
             return self.__s3_credentials()
         else:
-            raise ValueError("No such credentials are available. Choose from: 'alpha', 'timescale', 's3'")
+            raise ValueError("❌ No such credentials are available. Choose from: 'alpha', 'timescale', 's3'")
 
 
 
 
 if __name__=='__main__':
-    cred = Credentials(credential_name='alpha')
+    cred = Credentials(credential_name='timescale')
     try:
         print(cred.get_credentials())
     except Exception as e:
