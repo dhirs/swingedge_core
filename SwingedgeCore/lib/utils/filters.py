@@ -4,7 +4,7 @@ class Filters:
     def __init__(self, df):
         self.df = df
 
-    def close_price_filter(self, min_price=None, max_price=None, price_reference='min'):
+    def close_price_filter(self, min_price=None, max_price=None, price_reference_date='earliest'):
         """
         Filters rows based on their closing price at either the earliest or latest timestamp.
 
@@ -14,13 +14,13 @@ class Filters:
         :return: Filtered DataFrame.
         """
         data = self.df.copy()
-        price_reference = price_reference.lower()
+        price_reference = price_reference_date.lower()
 
-        if price_reference not in ['min', 'max']:
-            raise ValueError("price_reference must be 'min' or 'max'.")
+        if price_reference not in ['earliest', 'latest']:
+            raise ValueError("price_reference must be 'earliest' or 'latest'.")
 
         # Find the row corresponding to the earliest or latest timestamp for each symbol
-        if price_reference == 'min':
+        if price_reference == 'earliest':
             ref_rows = data.loc[data.groupby("symbol")["bucket"].idxmin()]
         else:
             ref_rows = data.loc[data.groupby("symbol")["bucket"].idxmax()]
@@ -35,5 +35,5 @@ class Filters:
         
         # Merge back to retain only rows that match the filtered symbols
         filtered_data = data[data['symbol'].isin(ref_rows['symbol'])].reset_index(drop=True)
-
+        
         return filtered_data

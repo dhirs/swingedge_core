@@ -52,4 +52,4 @@ class DBBase:
             print("❌ Error while executing query:", e)
             conn.rollback()
             return None
-        
+      
